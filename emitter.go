@@ -24,9 +24,31 @@ func Start(stop chan int) {
 
 		go CopyMulty(middleware, Plugins.Outputs...)
 	} else {
+		/*
+			1、从所有输入中读取数据，写到输出
+		*/
 		for _, in := range Plugins.Inputs {
 			go CopyMulty(in, Plugins.Outputs...)
 		}
+		/*TODO:
+			这里没看懂，是从所有有response的输出中copy数据到所有输出的
+			目的是干啥？
+			r, ok := out.(io.Reader)
+			写法是类型断言,之前碰到过的type ,其中type 就是断言interface
+			如：
+			type Element interface{}
+			func main(){
+				var e Element=100
+				switch value:=e.(type){
+				case int:
+					fmt.Println("int",value)
+				case string:
+					fmt.Println("string",value)
+				default:
+					fmt.Println("unknown")
+				}
+			}
+		*/
 
 		for _, out := range Plugins.Outputs {
 			if r, ok := out.(io.Reader); ok {
@@ -46,6 +68,7 @@ func Start(stop chan int) {
 }
 
 // CopyMulty copies from 1 reader to multiple writers
+// and do modify and filter
 func CopyMulty(src io.Reader, writers ...io.Writer) (err error) {
 	buf := make([]byte, 5*1024*1024)
 	wIndex := 0
