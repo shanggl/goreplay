@@ -10,6 +10,9 @@
 
  > emitter.go 程序核心事件处理实现对于Plugin.Inputs 输入流的读取、是否需要进行middlewear的处理、http美化与修改，之后异步copy流量到所有 Plugin.outputs，同时将所有Plugin.outputs 中有response的数据，复制到所有outputs中 *（这一点没读明白。。还在费解中)*
 
+ > input_xxx.go output_xxx.go  主要是输入输出的插件，实现tcp/http/raw/kafuka 等协议，
+实现io.Reader  io.Writer 接口，最后根据配置注册到 Plugin.inputs Plugin.outputs 队列里
+
  ## 主要核心流程
  主要核心流程如[下图](./goreplay.png),
  <img src="./goreplay.png"></img>
